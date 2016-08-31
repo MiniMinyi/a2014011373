@@ -36,15 +36,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ihandy.a2014011373.R;
+import com.ihandy.a2014011373.RecyclerViewFragment;
 import com.woxthebox.draglistview.DragItem;
 import com.woxthebox.draglistview.DragListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListFragment extends Fragment {
 
     private DragListView mDragListView;
     private MySwipeRefreshLayout mRefreshLayout;
+    private ItemAdapter mListAdapter;
 
     public static ListFragment newInstance() {
         return new ListFragment();
@@ -99,13 +102,15 @@ public class ListFragment extends Fragment {
 
     private void setupListRecyclerView() {
         mDragListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ItemAdapter listAdapter = new ItemAdapter(R.layout.list_item, R.id.image, false);
-        mDragListView.setAdapter(listAdapter, true);
+        mListAdapter = new ItemAdapter(R.layout.list_item, R.id.image, false);
+        mDragListView.setAdapter(mListAdapter, true);
         mDragListView.setCanDragHorizontally(false);
         mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
     }
 
-
+    public List<Pair<String,RecyclerViewFragment>> getItemList() {
+        return mListAdapter.getItemList();
+    }
 
     private static class MyDragItem extends DragItem {
 
