@@ -18,11 +18,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ihandy.a2014011373.manage_category.MySwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <!-- Need to wrap DragListView in another layout for
             wrap_content to work for some reason -->
         <FrameLayout
@@ -34,5 +29,4 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </FrameLayout>
-    </com.ihandy.a2014011373.manage_category.MySwipeRefreshLayout>
 </FrameLayout>
