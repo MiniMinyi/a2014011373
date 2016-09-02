@@ -8,7 +8,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.ihandy.a2014011373.R;
 
+import java.util.List;
+
 public class ManageCategoryActivity extends AppCompatActivity {
+    private ListFragment mListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +21,19 @@ public class ManageCategoryActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        showFragment(ListFragment.newInstance());
+        mListFragment = ListFragment.newInstance();
+        showFragment(mListFragment);
     }
 
     private void showFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment, "fragment").commit();
     }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        setResult(RESULT_OK);
+        return super.onSupportNavigateUp();
+    }
+
 }
