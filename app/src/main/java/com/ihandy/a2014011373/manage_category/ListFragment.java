@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ihandy.a2014011373.CategoryTab;
 import com.ihandy.a2014011373.R;
 import com.ihandy.a2014011373.RecyclerViewFragment;
 import com.woxthebox.draglistview.DragItem;
@@ -38,7 +39,7 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     private DragListView mDragListView;
-    private ItemAdapter mListAdapter;
+    public ItemAdapter mListAdapter;
 
     public static ListFragment newInstance() {
         return new ListFragment();
@@ -80,10 +81,6 @@ public class ListFragment extends Fragment {
         mDragListView.setAdapter(mListAdapter, true);
         mDragListView.setCanDragHorizontally(false);
         mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item_watched_category));
-    }
-
-    public List<Pair<String,RecyclerViewFragment>> getItemList() {
-        return mListAdapter.getItemList();
     }
 
     private static class MyDragItem extends DragItem {

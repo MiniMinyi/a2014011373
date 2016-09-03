@@ -19,7 +19,6 @@ import java.util.List;
  * Created by liumy on 16/8/27.
  */
 public class RecyclerViewFragment extends Fragment{
-    private int id;
     static final boolean GRID_LAYOUT = false;
     private static final int ITEM_COUNT = 10;
     private RecyclerView mRecyclerView;
@@ -27,17 +26,8 @@ public class RecyclerViewFragment extends Fragment{
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Object> mContentItems = new ArrayList<>();
 
-    public static RecyclerViewFragment newInstance(int id) {
-        return new RecyclerViewFragment().setId(id);
-    }
-
-    RecyclerViewFragment setId(int id){
-        this.id = id;
-        return this;
-    }
-
-    public int getCustomId(){
-        return id;
+    public static RecyclerViewFragment newInstance() {
+        return new RecyclerViewFragment();
     }
 
     @Override
@@ -61,7 +51,7 @@ public class RecyclerViewFragment extends Fragment{
         //Use this now
         mRecyclerView.addItemDecoration(new MaterialViewPagerHeaderDecorator());
 
-        mAdapter = new TestRecyclerViewAdapter(mContentItems);
+        mAdapter = new NewsRecyclerViewAdapter(mContentItems);
 
         //mAdapter = new RecyclerViewMaterialAdapter();
         mRecyclerView.setAdapter(mAdapter);
