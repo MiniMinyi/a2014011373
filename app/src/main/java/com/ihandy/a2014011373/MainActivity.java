@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.ihandy.a2014011373.manage_category.ManageCategoryActivity;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -80,35 +79,35 @@ public class MainActivity extends AppCompatActivity
         tabList = new ArrayList<>();
         int id = 0;
         tabList.add(new CategoryTab("bussiness","Bussiness",
-                RecyclerViewFragment.newInstance("bussiness"),id));
+                RecyclerViewFragment.newInstance(),id));
         ++id;
         tabList.add(new CategoryTab("elections","Elections",
-                RecyclerViewFragment.newInstance("elections"),id));
+                RecyclerViewFragment.newInstance(),id));
         ++id;
         tabList.add(new CategoryTab("entertainment","Entertainment",
-                RecyclerViewFragment.newInstance("entertainment"),id));
+                RecyclerViewFragment.newInstance(),id));
         ++id;
         tabList.add(new CategoryTab("health","Health",
-                RecyclerViewFragment.newInstance("health"),id));
+                RecyclerViewFragment.newInstance(),id));
         ++id;
         tabList.add(new CategoryTab("national","India",
-                RecyclerViewFragment.newInstance("national"),id));
-//        ++id;
-//        tabList.add(new CategoryTab("science","Science",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("sports","Sports",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("technology_science","Technology",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("top_stories","Top Stories",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("world","World",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("science","Science",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("sports","Sports",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("technology_science","Technology",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("top_stories","Top Stories",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("world","World",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
     }
 
     private void setupAdapter(){
@@ -116,6 +115,9 @@ public class MainActivity extends AppCompatActivity
             //initTabList();
             tabList = new ArrayList<CategoryTab>();
             PresenterSingleton.getInstance(this).initCurrentCategories();
+        }
+        if (mNewsPagerAdapter != null){
+            mNewsPagerAdapter.notifyDataSetChanged();
         }
         mNewsPagerAdapter = new NewsPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.getViewPager().setAdapter(mNewsPagerAdapter);

@@ -3,7 +3,6 @@ package com.ihandy.a2014011373;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -68,7 +67,7 @@ public class PresenterSingleton {
                                     while (it.hasNext()){
                                         String key = it.next().toString();
                                         String title = categories.get(key).toString();
-                                        RecyclerViewFragment fragment = RecyclerViewFragment.newInstance(key);
+                                        RecyclerViewFragment fragment = RecyclerViewFragment.newInstance();
                                         fragment.setContext(mContext);
                                         List<News> newsList = new ArrayList<News>();
                                         getListOfNews(key,newsList,fragment);
@@ -76,13 +75,12 @@ public class PresenterSingleton {
                                                 fragment,id));
                                         ++ id;
                                     }
-                                    if (ManageCategoryActivity.mListFragment != null){
-                                        ManageCategoryActivity.mListFragment.mListAdapter.notifyDataSetChanged();
-                                    }
                                     if (MainActivity.mNewsPagerAdapter != null){
                                         MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
                                     }
-
+                                    if (ManageCategoryActivity.mListFragment != null){
+                                        ManageCategoryActivity.mListFragment.mListAdapter.notifyDataSetChanged();
+                                    }
                                 }catch (JSONException e){
                                     Log.e("JSONException",e.toString());
                                 }
@@ -97,98 +95,6 @@ public class PresenterSingleton {
         RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
     }
 
-    /**
-     *
-     * @param newsArray
-     * @param newsList
-     * @return new added news number
-     * @throws JSONException
-     */
-    private int setNewslistFromJSONArray(JSONArray newsArray, List<News> newsList, RecyclerViewFragment fragment) throws JSONException{
-        int newlyAddNewsCount = 0;
-        for (int i = 0; i < newsArray.length(); i++) {
-            JSONObject news = newsArray.getJSONObject(i);
-            News oneNews = new News();
-            JSONArray imgs = news.optJSONArray("imgs");
-            JSONObject firstImg = null;
-            if (imgs != null) firstImg = imgs.getJSONObject(0);
-
-            try {
-                JSONObject source = news.getJSONObject("source");
-                oneNews.source_name = source.getString("name");
-                oneNews.source_url = source.getString("url");
-            }catch (JSONException e){
-                Log.e("setNewsListFromJSOArray",e.toString());
-                continue;
-            }
-
-            oneNews.title = news.getString("title");
-            oneNews.locale_category = news.getString("locale_category");
-            oneNews.news_id = news.getLong("news_id");
-            //if the added news isn't newest than original newest news
-            if (i == newlyAddNewsCount && newsList.size() > newlyAddNewsCount &&
-                    oneNews.news_id <= newsList.get(newlyAddNewsCount).news_id){
-                return newlyAddNewsCount;
-            }
-            oneNews.origin = news.getString("origin");
-            oneNews.category = news.getString("category");
-            oneNews.country = news.getString("country");
-            oneNews.fetched_time = news.getLong("fetched_time");
-            try {
-                oneNews.updated_time = news.getLong("updated_time");
-            }catch (JSONException e){
-                oneNews.updated_time = oneNews.fetched_time;
-            }
-            if (firstImg != null)
-                oneNews.img_url = firstImg.getString("url");
-            newsList.add(newlyAddNewsCount,oneNews);
-            ++newlyAddNewsCount;
-            if (newlyAddNewsCount % 6 == 5) {
-                fragment.notifyDataChange();
-                MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
-            }
-        }
-        return newlyAddNewsCount;
-    }
-
-    private int getPreviousNewsFromJSONArray(JSONArray newsArray, List<News> newsList) throws JSONException{
-        int newlyAddNewsCount = 0;
-        for (int i = 0; i < newsArray.length(); i++) {
-            JSONObject news = newsArray.getJSONObject(i);
-            News oneNews = new News();
-            JSONArray imgs = news.optJSONArray("imgs");
-            JSONObject firstImg = null;
-            if (imgs != null) firstImg = imgs.getJSONObject(0);
-
-            try {
-                JSONObject source = news.getJSONObject("source");
-                oneNews.source_name = source.getString("name");
-                oneNews.source_url = source.getString("url");
-            }catch (JSONException e){
-                Log.e("setNewsListFromJSOArray",e.toString());
-                continue;
-            }
-
-            oneNews.title = news.getString("title");
-            oneNews.locale_category = news.getString("locale_category");
-            oneNews.news_id = news.getLong("news_id");
-            oneNews.origin = news.getString("origin");
-            oneNews.category = news.getString("category");
-            oneNews.country = news.getString("country");
-            oneNews.fetched_time = news.getLong("fetched_time");
-            try {
-                oneNews.updated_time = news.getLong("updated_time");
-            }catch (JSONException e){
-                oneNews.updated_time = oneNews.fetched_time;
-            }
-            if (firstImg != null)
-                oneNews.img_url = firstImg.getString("url");
-            newsList.add(oneNews);
-            ++newlyAddNewsCount;
-        }
-        return newlyAddNewsCount;
-    }
-
     private void getListOfNews(String categoryKey, final List<News> newsList, final RecyclerViewFragment fragment){
         String url = String.format(URL_FOR_NEWEST_NEWS,categoryKey);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -198,125 +104,53 @@ public class PresenterSingleton {
                             public void onResponse(JSONObject response) {
                                 try{
                                     JSONObject data = response.getJSONObject("data");
-                                    JSONArray newsArray = data.getJSONArray("news");
-                                    fragment.setContentItems(newsList);
-                                    setNewslistFromJSONArray(newsArray,newsList,fragment);
-//                                    if (MainActivity.mNewsPagerAdapter != null){
-//                                        MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
-//                                    }
-
-                                }catch (JSONException e){
-                                    Log.e("getListOfNews",e.toString());
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                if (fragment.mSwipyRefreshLayout != null) {
-                                    fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                    Toast.makeText(fragment.getContext(), "Couldn't update news.", Toast.LENGTH_SHORT).show();
-                                }
-                                Log.e("getListOfNews",error.toString());
-                            }
-                        });
-        RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
-    }
-
-    public void updateNews(String categoryKey, final List<News> newsList, final RecyclerViewFragment fragment){
-        String url = String.format(URL_FOR_NEWEST_NEWS,categoryKey);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url,
-                        new Response.Listener<JSONObject>() {
-                            int newCount = 0;
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try{
-                                    JSONObject data = response.getJSONObject("data");
-                                    JSONArray newsArray = data.getJSONArray("news");
-                                    newCount = setNewslistFromJSONArray(newsArray,newsList,fragment);
-
-                                    if (newCount == 0) {
-                                        fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                        Toast.makeText(fragment.getContext(), "No news update.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Toast.makeText(fragment.getContext(), String.format("%d news updated", newCount),
-                                                Toast.LENGTH_SHORT).show();
-                                        fragment.notifyDataChange();
-                                        fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                        if (MainActivity.mNewsPagerAdapter != null){
-                                            MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                }catch (JSONException e){
-                                    Log.e("getListOfNews",e.toString());
-                                    if (newCount == 0) {
-                                        fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                        Toast.makeText(fragment.getContext(), "No news update.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Toast.makeText(fragment.getContext(), String.format("%d news updated", newCount),
-                                                Toast.LENGTH_SHORT).show();
-                                        fragment.notifyDataChange();
-                                        fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                    }
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                if (fragment.mSwipyRefreshLayout != null) {
-                                    fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                    Toast.makeText(fragment.getContext(), "Couldn't update news.", Toast.LENGTH_SHORT).show();
-                                }
-                                Log.e("getListOfNews",error.toString());
-                            }
-                        });
-        RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
-    }
-
-    public void getPreviousNews(String categoryKey,final List<News> newsList, final RecyclerViewFragment fragment){
-        String url = String.format(URL_FOR_OLDER_NEWS,categoryKey,newsList.get(newsList.size()-1).news_id - 1);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try{
-                                    JSONObject data = response.getJSONObject("data");
-                                    JSONArray newsArray = data.getJSONArray("news");
-                                    int addCount = getPreviousNewsFromJSONArray(newsArray,newsList);
-                                    if (addCount == 0){
-                                        Toast.makeText(fragment.getContext(),"No older news",Toast.LENGTH_SHORT).show();
-                                        fragment.mSwipyRefreshLayout.setRefreshing(false);
+                                    if (data == null){
                                         return;
                                     }
-                                    Toast.makeText(fragment.getContext(),String.format("Fetch %d previous news.",addCount),Toast.LENGTH_SHORT).show();
-                                    fragment.mSwipyRefreshLayout.setRefreshing(false);
+                                    JSONArray newsArray = data.getJSONArray("news");
+                                    for (int i = 0; i < newsArray.length(); i++) {
+                                        JSONObject news = newsArray.getJSONObject(i);
+                                        JSONArray imgs = news.optJSONArray("imgs");
+                                        JSONObject firstImg = null;
+                                        if (imgs != null) firstImg = imgs.getJSONObject(0);
+                                        JSONObject source = news.getJSONObject("source");
+                                        News oneNews = new News();
+                                        oneNews.title = news.getString("title");
+                                        oneNews.locale_category = news.getString("locale_category");
+                                        oneNews.news_id = news.getLong("news_id");
+                                        oneNews.origin = news.getString("origin");
+                                        oneNews.category = news.getString("category");
+                                        oneNews.country = news.getString("country");
+                                        oneNews.fetched_time = news.getLong("fetched_time");
+                                        oneNews.updated_time = news.getLong("updated_time");
+                                        if (firstImg != null)
+                                            oneNews.img_url = firstImg.getString("url");
+                                        if (source != null){
+                                            oneNews.source_name = source.getString("name");
+                                            oneNews.source_url = source.getString("url");
+                                        }
+                                        newsList.add(oneNews);
+                                    }
+                                    fragment.setContentItems(newsList);
                                     fragment.notifyDataChange();
-                                    //MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
+                                    if (MainActivity.mNewsPagerAdapter != null){
+                                        MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
+                                    }
+
                                 }catch (JSONException e){
-                                    Toast.makeText(fragment.getContext(),"No older news",Toast.LENGTH_SHORT).show();
-                                    fragment.mSwipyRefreshLayout.setRefreshing(false);
                                     Log.e("getListOfNews",e.toString());
-                                    return;
                                 }
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                if (fragment.mSwipyRefreshLayout != null) {
-                                    fragment.mSwipyRefreshLayout.setRefreshing(false);
-                                    Toast.makeText(fragment.getContext(), "Couldn't update news.", Toast.LENGTH_SHORT).show();
-                                }
                                 Log.e("getListOfNews",error.toString());
                             }
                         });
         RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
     }
+
 
     public boolean checkNetworkConnection(){
         ConnectivityManager connMgr = (ConnectivityManager)
