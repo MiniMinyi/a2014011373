@@ -72,18 +72,13 @@ public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHo
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair<String, RecyclerViewFragment> pair = (Pair<String, RecyclerViewFragment>) removeItem(getPositionForItemId((long) v.getTag()));
-                anotherAdapter.addItem(0, pair);
+                CategoryTab categoryTab = (CategoryTab) removeItem(getPositionForItemId((long) v.getTag()));
+                anotherAdapter.addItem(0, categoryTab);
                 activity.fragmentChanged();
                 //Toast.makeText(v.getContext(), " " + v.getTag(), Toast.LENGTH_SHORT).show();getPositionForItemId((long) v.getTag())
             }
         });
         return new ViewHolder(view);
-        //else
-    }
-
-    public void addMyItem(Pair<String, RecyclerViewFragment> pair, int position) {
-        addItem(position, pair);
     }
 
     @Override
