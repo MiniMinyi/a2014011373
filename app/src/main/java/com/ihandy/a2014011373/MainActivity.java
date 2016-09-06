@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private NewsPagerAdapter mNewsPagerAdapter;
     private Toolbar toolbar;
     public static ArrayList<Pair<String,RecyclerViewFragment>> tabList;
+    public static ArrayList<Pair<String,RecyclerViewFragment>> unwatchedTabList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
         toolbar = mViewPager.getToolbar();
+        unwatchedTabList = new ArrayList<>();
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
