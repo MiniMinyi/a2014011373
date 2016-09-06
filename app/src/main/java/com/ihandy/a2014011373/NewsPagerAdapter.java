@@ -11,7 +11,7 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 /**
  * Created by liumy on 16/8/26.
  */
-public class NewsPagerAdapter extends NewFragmentStatePagerAdapter {
+public class NewsPagerAdapter extends FragmentStatePagerAdapter {
     MainActivity mainActivity;
 
     public NewsPagerAdapter(FragmentManager fm, MainActivity mainActivity){
@@ -21,6 +21,7 @@ public class NewsPagerAdapter extends NewFragmentStatePagerAdapter {
 
     /**
      * 得到每个页面
+     * @TODO return appropriate Fragment later
      */
     @Override
     public Fragment getItem(int position){
@@ -63,6 +64,8 @@ public class NewsPagerAdapter extends NewFragmentStatePagerAdapter {
                     Drawable redPic = mainActivity.createDrawableFromResource(R.drawable.bg4);
                     return HeaderDesign.fromColorResAndDrawable(R.color.red,redPic);
             }
+
+            //execute others actions if needed (ex : modify your header logo)
 
             return null;
         }
