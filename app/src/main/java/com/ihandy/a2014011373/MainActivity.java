@@ -1,5 +1,6 @@
 package com.ihandy.a2014011373;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,29 +31,28 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     public static final int START_MANAGE_CATEGORY = 1;
-    public static final int RETURN_FROM_MANAGE_CATEGORY = 2;
     private MaterialViewPager mViewPager;
-    private NewsPagerAdapter mNewsPagerAdapter;
+    public static NewsPagerAdapter mNewsPagerAdapter;
     private Toolbar toolbar;
-    public static ArrayList<Pair<String,RecyclerViewFragment>> tabList;
+    public static ArrayList<CategoryTab> tabList = null;
+    public static RequestQueueSingleton mRequestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRequestQueue = RequestQueueSingleton.getInstance(this);
+        setUpViewPager();
+    }
+
+    private void setUpViewPager(){
         setContentView(R.layout.activity_main_material_view_pager);
-
-        setTitle("MainActivity");
-
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
-
         toolbar = mViewPager.getToolbar();
-
+        toolbar.setTitle("");
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-
         setupAdapter();
-
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
@@ -62,10 +62,64 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     mViewPager.notifyHeaderChanged();
-                    Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
+                    if (!PresenterSingleton.getInstance(MainActivity.this).checkNetworkConnection()){
+                        Toast.makeText(getApplicationContext(),"No network connection available.",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(),"Network connection is available.",Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
+    }
+
+    //TODO change to load tablist from disk later
+    private void initTabList(){
+        tabList = new ArrayList<>();
+        int id = 0;
+        tabList.add(new CategoryTab("bussiness","Bussiness",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("elections","Elections",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("entertainment","Entertainment",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("health","Health",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("national","India",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("science","Science",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("sports","Sports",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("technology_science","Technology",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("top_stories","Top Stories",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+        tabList.add(new CategoryTab("world","World",
+                RecyclerViewFragment.newInstance(),id));
+        ++id;
+    }
+
+    private void setupAdapter(){
+        if (tabList == null){
+            //initTabList();
+            tabList = new ArrayList<CategoryTab>();
+            PresenterSingleton.getInstance(this).initCurrentCategories();
+        }
+        if (mNewsPagerAdapter != null){
+            mNewsPagerAdapter.notifyDataSetChanged();
+        }
+        mNewsPagerAdapter = new NewsPagerAdapter(getSupportFragmentManager(), this);
+        mViewPager.getViewPager().setAdapter(mNewsPagerAdapter);
+        mViewPager.setMaterialViewPagerListener(mNewsPagerAdapter.newMaterialViewPagerListener());
     }
 
     @Override
@@ -89,21 +143,7 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setHomeButtonEnabled(true);
         }
-    }
 
-    private void initTabList(){
-        tabList = new ArrayList<>();
-        tabList.add(new Pair<>("Bussiness",RecyclerViewFragment.newInstance(1)));
-        tabList.add(new Pair<>("Sports",RecyclerViewFragment.newInstance(2)));
-        tabList.add(new Pair<>("Entertainment",RecyclerViewFragment.newInstance(3)));
-        tabList.add(new Pair<>("World",RecyclerViewFragment.newInstance(4)));
-    }
-
-    private void setupAdapter(){
-        initTabList();
-        mNewsPagerAdapter = new NewsPagerAdapter(getSupportFragmentManager(), this);
-        mViewPager.getViewPager().setAdapter(mNewsPagerAdapter);
-        mViewPager.setMaterialViewPagerListener(mNewsPagerAdapter.newMaterialViewPagerListener());
     }
 
     public Drawable createDrawableFromResource(int drawableId){
@@ -142,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage_category) {
             Intent intent = new Intent(MainActivity.this,ManageCategoryActivity.class);
             startActivityForResult(intent,START_MANAGE_CATEGORY);
-
         } else if (id == R.id.nav_about_me) {
             Intent intent = new Intent(this,AboutMe.class);
             startActivity(intent);
