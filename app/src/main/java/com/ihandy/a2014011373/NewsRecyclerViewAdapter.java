@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -17,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by liumy on 16/8/27.
+ * RecyclerViewAdapter to display every news
  */
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<News> contents;
@@ -42,14 +42,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_card_small, parent, false);
-        mNetworkImageView = (NetworkImageView) view.findViewById(R.id.news_img);
-        //mNetworkImageView.setDefaultImageResId(R.drawable.img_not_found);
         if (contents.size() == 0){
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_news_not_found, parent, false);
             return new RecyclerView.ViewHolder(view){
             };
         }
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_card_news, parent, false);
+        mNetworkImageView = (NetworkImageView) view.findViewById(R.id.news_img);
         mImageLoader = RequestQueueSingleton.getInstance(mContext).getImageLoader();
         final News news = contents.get(viewType);
         if (news.img_url != null){
