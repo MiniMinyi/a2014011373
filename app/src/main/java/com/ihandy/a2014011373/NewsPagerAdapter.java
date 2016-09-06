@@ -25,16 +25,14 @@ public class NewsPagerAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public Fragment getItem(int position){
-        return mainActivity.tabList.get(position).second;
+        return mainActivity.tabList.get(position).getFragment();
     }
-
-
     /**
      * 每个页面的title
      */
     @Override
     public CharSequence getPageTitle(int position){
-        return (mainActivity.tabList.size() > position) ? mainActivity.tabList.get(position).first:"";
+        return (mainActivity.tabList.size() > position) ? mainActivity.tabList.get(position).getTitle():"";
     }
 
     /**
@@ -52,7 +50,7 @@ public class NewsPagerAdapter extends FragmentStatePagerAdapter {
 
         @Override
         public HeaderDesign getHeaderDesign(int page) {
-            switch (page) {
+            switch (page % 4) {
                 case 0:
                     Drawable greenPic = mainActivity.createDrawableFromResource(R.drawable.bg1);
                     return HeaderDesign.fromColorResAndDrawable(R.color.green,greenPic);

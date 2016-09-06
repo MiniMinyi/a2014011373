@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ihandy.a2014011373.AboutMe">
+    <item
+    android:id="@+id/action_get_categories"
+    android:orderInCategory="100"
+    android:title="@string/action_get_categories"
+    app:showAsAction="never" />
+</menu>

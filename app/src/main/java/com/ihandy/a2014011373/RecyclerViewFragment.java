@@ -1,5 +1,6 @@
 package com.ihandy.a2014011373;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,25 +20,27 @@ import java.util.List;
  * Created by liumy on 16/8/27.
  */
 public class RecyclerViewFragment extends Fragment{
-    private int id;
-    static final boolean GRID_LAYOUT = false;
-    private static final int ITEM_COUNT = 10;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Object> mContentItems = new ArrayList<>();
+    private Context mContext;
+    private List<News> mContentItems = new ArrayList<>();
 
-    public static RecyclerViewFragment newInstance(int id) {
-        return new RecyclerViewFragment().setId(id);
+    public static RecyclerViewFragment newInstance() {
+        return new RecyclerViewFragment();
     }
 
-    RecyclerViewFragment setId(int id){
-        this.id = id;
-        return this;
+    public void setContentItems(List<News> contentItems){
+        this.mContentItems = contentItems;
     }
 
-    public int getCustomId(){
-        return id;
+    public void setContext(Context context){
+        this.mContext = context;
+    }
+
+    public void notifyDataChange(){
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -50,27 +53,15 @@ public class RecyclerViewFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        if (GRID_LAYOUT) {
-            mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        } else {
-            mLayoutManager = new LinearLayoutManager(getActivity());
-        }
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
         //Use this now
         mRecyclerView.addItemDecoration(new MaterialViewPagerHeaderDecorator());
 
-        mAdapter = new TestRecyclerViewAdapter(mContentItems);
+        mAdapter = new NewsRecyclerViewAdapter(mContentItems,mContext);
 
-        //mAdapter = new RecyclerViewMaterialAdapter();
         mRecyclerView.setAdapter(mAdapter);
-
-        {
-            for (int i = 0; i < ITEM_COUNT; ++i) {
-                mContentItems.add(new Object());
-            }
-            mAdapter.notifyDataSetChanged();
-        }
     }
 }

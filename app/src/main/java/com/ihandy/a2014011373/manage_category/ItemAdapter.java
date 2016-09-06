@@ -27,6 +27,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ihandy.a2014011373.CategoryTab;
 import com.ihandy.a2014011373.MainActivity;
 import com.ihandy.a2014011373.R;
 import com.ihandy.a2014011373.RecyclerViewFragment;
@@ -38,7 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ItemAdapter extends DragItemAdapter<Pair<String, RecyclerViewFragment>, ItemAdapter.ViewHolder> {
+public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHolder> {
 
     private int mLayoutId;
     private int mGrabHandleId;
@@ -88,17 +89,17 @@ public class ItemAdapter extends DragItemAdapter<Pair<String, RecyclerViewFragme
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        String text = mItemList.get(position).first;
+        String text = mItemList.get(position).getTitle();
         holder.mText.setText(text);
         holder.itemView.setTag(text);
     }
 
     @Override
     public long getItemId(int position) {
-        return mItemList.get(position).second.getCustomId();
+        return mItemList.get(position).getCustomId();
     }
 
-    public class ViewHolder extends DragItemAdapter<Pair<String, RecyclerViewFragment>, ItemAdapter.ViewHolder>.ViewHolder {
+    public class ViewHolder extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHolder>.ViewHolder {
         public TextView mText;
 
         public ViewHolder(final View itemView) {
@@ -108,12 +109,12 @@ public class ItemAdapter extends DragItemAdapter<Pair<String, RecyclerViewFragme
 
         @Override
         public void onItemClicked(View view) {
-            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public boolean onItemLongClicked(View view) {
-            Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
