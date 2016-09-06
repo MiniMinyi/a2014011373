@@ -16,10 +16,14 @@
 
 package com.ihandy.a2014011373.manage_category;
 
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,23 +34,50 @@ import com.ihandy.a2014011373.RecyclerViewFragment;
 import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHolder> {
 
     private int mLayoutId;
     private int mGrabHandleId;
+    public int count = 0;
+    private boolean isWatched;
+    public ItemAdapter anotherAdapter;
+    private ManageCategoryActivity activity;
 
-    public ItemAdapter(int layoutId, int grabHandleId, boolean dragOnLongPress) {
+    public ItemAdapter(int layoutId, int grabHandleId, boolean dragOnLongPress, boolean isWatched, ManageCategoryActivity activity) {
         super(dragOnLongPress);
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
+        this.isWatched = isWatched;
+        this.activity = activity;
         setHasStableIds(true);
-        setItemList(MainActivity.tabList);
+        if(isWatched) {
+            setItemList(MainActivity.tabList);
+        }
+        else {
+            setItemList(MainActivity.unwatchedTabList);
+        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+        Button button = (Button) view.findViewById(R.id.button);
+        button.setTag(getItemId(count));
+        count ++;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryTab categoryTab = (CategoryTab) removeItem(getPositionForItemId((long) v.getTag()));
+                anotherAdapter.addItem(0, categoryTab);
+                activity.fragmentChanged();
+                //Toast.makeText(v.getContext(), " " + v.getTag(), Toast.LENGTH_SHORT).show();getPositionForItemId((long) v.getTag())
+            }
+        });
         return new ViewHolder(view);
     }
 

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     public static NewsPagerAdapter mNewsPagerAdapter;
     private Toolbar toolbar;
     public static ArrayList<CategoryTab> tabList = null;
+    public static ArrayList<CategoryTab> unwatchedTabList = null;
     public static RequestQueueSingleton mRequestQueue;
 
     @Override
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_material_view_pager);
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         toolbar = mViewPager.getToolbar();
+        unwatchedTabList = new ArrayList<>();
         toolbar.setTitle("");
         if (toolbar != null) {
             setSupportActionBar(toolbar);

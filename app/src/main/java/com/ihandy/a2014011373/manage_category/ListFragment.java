@@ -17,6 +17,7 @@
 package com.ihandy.a2014011373.manage_category;
 
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,14 +37,17 @@ import com.woxthebox.draglistview.DragListView;
 
 import java.util.List;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment{
 
     private DragListView mDragListView;
     public ItemAdapter mListAdapter;
 
-    public static ListFragment newInstance() {
-        return new ListFragment();
+    public static ListFragment newInstance(ItemAdapter mListAdapter) {
+        ListFragment listFragment= new ListFragment();
+        listFragment.mListAdapter = mListAdapter;
+        return listFragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +81,12 @@ public class ListFragment extends Fragment {
 
     private void setupListRecyclerView() {
         mDragListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mListAdapter = new ItemAdapter(R.layout.list_item_watched_category, R.id.image, false);
+        //mListAdapter = new ItemAdapter(R.layout.list_item_watched_category, R.id.image, false);
         mDragListView.setAdapter(mListAdapter, true);
         mDragListView.setCanDragHorizontally(false);
         mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item_watched_category));
+        //List<Pair<String,RecyclerViewFragment>> list = mListAdapter.getItemList();
+
     }
 
     private static class MyDragItem extends DragItem {
