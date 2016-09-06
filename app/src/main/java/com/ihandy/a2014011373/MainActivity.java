@@ -35,10 +35,12 @@ public class MainActivity extends AppCompatActivity
     public static NewsPagerAdapter mNewsPagerAdapter;
     private Toolbar toolbar;
     public static ArrayList<CategoryTab> tabList = null;
+    public static RequestQueueSingleton mRequestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRequestQueue = RequestQueueSingleton.getInstance(this);
         setUpViewPager();
     }
 
@@ -108,7 +110,9 @@ public class MainActivity extends AppCompatActivity
 
     private void setupAdapter(){
         if (tabList == null){
-            initTabList();
+            //initTabList();
+            tabList = new ArrayList<CategoryTab>();
+            PresenterSingleton.getInstance(this).initCurrentCategories();
         }
         if (mNewsPagerAdapter != null){
             mNewsPagerAdapter.notifyDataSetChanged();
@@ -178,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage_category) {
             Intent intent = new Intent(MainActivity.this,ManageCategoryActivity.class);
             startActivityForResult(intent,START_MANAGE_CATEGORY);
-
         } else if (id == R.id.nav_about_me) {
             Intent intent = new Intent(this,AboutMe.class);
             startActivity(intent);

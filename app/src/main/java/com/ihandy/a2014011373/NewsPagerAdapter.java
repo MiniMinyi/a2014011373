@@ -27,8 +27,6 @@ public class NewsPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position){
         return mainActivity.tabList.get(position).getFragment();
     }
-
-
     /**
      * 每个页面的title
      */

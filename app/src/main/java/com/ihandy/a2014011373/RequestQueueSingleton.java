@@ -3,6 +3,7 @@ package com.ihandy.a2014011373;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,6 +39,7 @@ public class RequestQueueSingleton {
                     }
                 });
     }
+
 
     public static synchronized RequestQueueSingleton getInstance(Context context) {
         if (mInstance == null) {
