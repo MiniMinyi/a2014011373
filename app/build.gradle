@@ -33,4 +33,6 @@ dependencies {
     compile 'com.github.woxthebox:draglistview:1.2.9'
     compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.github.orangegangsters:swipy:1.2.3@aar'
+    compile 'com.thefinestartist:finestwebview:1.2.7'
 }

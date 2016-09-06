@@ -15,11 +15,13 @@
         android:layout_marginRight="@dimen/cardMarginHorizontal"
         android:layout_marginTop="@dimen/cardMarginVertical"
         app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp">
+        app:contentPadding="0dp"
+        android:clickable="true">
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-            <ImageView
+
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/news_img"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -27,10 +29,10 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="false"
-                android:src="@drawable/img_not_found"
                 android:scaleType="centerCrop"/>
 
             <TextView
+                android:id="@+id/news_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/news_img"
