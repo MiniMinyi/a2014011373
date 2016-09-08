@@ -43,7 +43,6 @@ public class AboutMe extends AppCompatActivity {
         setContentView(R.layout.activity_about_me);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        textView = (TextView) findViewById(R.id.testTextView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
