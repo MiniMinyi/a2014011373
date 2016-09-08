@@ -32,10 +32,12 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     public static final int START_MANAGE_CATEGORY = 1;
+    public static final int START_FAVORITE_NEWS = 2;
     private MaterialViewPager mViewPager;
     public static NewsPagerAdapter mNewsPagerAdapter;
     private Toolbar toolbar;
     public static ArrayList<CategoryTab> tabList = null;
+    public static ArrayList<CategoryTab> unwatchedTabList = null;
     public static RequestQueueSingleton mRequestQueue;
 
     @Override
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_material_view_pager);
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         toolbar = mViewPager.getToolbar();
+        unwatchedTabList = new ArrayList<>();
         toolbar.setTitle("");
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -91,22 +94,6 @@ public class MainActivity extends AppCompatActivity
         ++id;
         tabList.add(new CategoryTab("national","India",
                 RecyclerViewFragment.newInstance("national"),id));
-//        ++id;
-//        tabList.add(new CategoryTab("science","Science",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("sports","Sports",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("technology_science","Technology",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("top_stories","Top Stories",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
-//        tabList.add(new CategoryTab("world","World",
-//                RecyclerViewFragment.newInstance(),id));
-//        ++id;
     }
 
     private void setupAdapter(){
@@ -176,7 +163,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favorite) {
-
+            FavoriteNews.notifyDataChange();
+            Intent intent = new Intent(MainActivity.this,FavoriteNews.class);
+            startActivityForResult(intent,START_FAVORITE_NEWS);
         } else if (id == R.id.nav_manage_category) {
             Intent intent = new Intent(MainActivity.this,ManageCategoryActivity.class);
             startActivityForResult(intent,START_MANAGE_CATEGORY);

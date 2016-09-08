@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingTop="10dp"
+    tools:context="com.ihandy.a2014011373.FavoriteNewsFragment"
+    tools:showIn="@layout/activity_favorite_news">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewForFavoriteNews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</RelativeLayout>

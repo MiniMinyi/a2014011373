@@ -135,9 +135,9 @@ public class PresenterSingleton {
             oneNews.country = news.getString("country");
             oneNews.fetched_time = news.getLong("fetched_time");
             try {
-                oneNews.updated_time = news.getLong("updated_time");
+                oneNews.updated_time = news.getString("updated_time");
             }catch (JSONException e){
-                oneNews.updated_time = oneNews.fetched_time;
+                Log.d("getUpdatedTime",e.toString());
             }
             if (firstImg != null)
                 oneNews.img_url = firstImg.getString("url");
@@ -177,9 +177,9 @@ public class PresenterSingleton {
             oneNews.country = news.getString("country");
             oneNews.fetched_time = news.getLong("fetched_time");
             try {
-                oneNews.updated_time = news.getLong("updated_time");
+                oneNews.updated_time = news.getString("updated_time");
             }catch (JSONException e){
-                oneNews.updated_time = oneNews.fetched_time;
+                Log.d("getUpdatedTime",e.toString());
             }
             if (firstImg != null)
                 oneNews.img_url = firstImg.getString("url");
