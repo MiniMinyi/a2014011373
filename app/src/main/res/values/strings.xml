@@ -8,4 +8,5 @@
     <string name="action_get_categories">Get new categories</string>
     <string name="title_activity_about_me">AboutMe</string>
     <string name="title_activity_manage_category">ManageCategory</string>
+    <string name="title_activity_favorite_news">FavoriteNews</string>
 </resources>

@@ -37,8 +37,6 @@ import java.net.URL;
 import java.util.Iterator;
 
 public class AboutMe extends AppCompatActivity {
-    private TextView textView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

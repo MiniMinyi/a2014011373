@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.ihandy.a2014011373.R;
 import com.ihandy.a2014011373.RecyclerViewFragment;
 import com.woxthebox.draglistview.DragItemAdapter;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,7 +46,7 @@ public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHo
     private int mLayoutId;
     private int mGrabHandleId;
     public int count = 0;
-    private boolean isWatched;
+    public boolean isWatched;
     public ItemAdapter anotherAdapter;
     private ManageCategoryActivity activity;
 
@@ -66,6 +68,9 @@ public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+        ImageView image = (ImageView) view.findViewById(R.id.image);
+        if (!isWatched)
+            image.setVisibility(View.INVISIBLE);
         Button button = (Button) view.findViewById(R.id.button);
         button.setTag(getItemId(count));
         count ++;
@@ -104,12 +109,10 @@ public class ItemAdapter extends DragItemAdapter<CategoryTab, ItemAdapter.ViewHo
 
         @Override
         public void onItemClicked(View view) {
-//            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public boolean onItemLongClicked(View view) {
-//            Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
