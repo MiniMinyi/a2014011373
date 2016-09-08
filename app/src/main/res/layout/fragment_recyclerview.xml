@@ -5,8 +5,7 @@
     android:id="@+id/swipyrefreshlayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:srl_direction="both"
-    >
+    app:srl_direction="both">
 
 <android.support.v7.widget.RecyclerView
     android:id="@+id/recyclerView"

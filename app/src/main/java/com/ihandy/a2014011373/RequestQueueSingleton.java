@@ -3,6 +3,7 @@ package com.ihandy.a2014011373;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
@@ -23,21 +24,7 @@ public class RequestQueueSingleton {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
-        mImageLoader = new ImageLoader(mRequestQueue,
-                new ImageLoader.ImageCache() {
-                    private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(20);
-
-                    @Override
-                    public Bitmap getBitmap(String url) {
-                        return cache.get(url);
-                    }
-
-                    @Override
-                    public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
-                    }
-                });
+        mImageLoader = new ImageLoader(mRequestQueue, new LruBitmapCache(LruBitmapCache.getCacheSize(context)));
     }
 
 
@@ -64,4 +51,5 @@ public class RequestQueueSingleton {
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }
+
 }
