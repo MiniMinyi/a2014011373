@@ -119,7 +119,6 @@ public class PresenterSingleton {
                 oneNews.source_url = source.getString("url");
             }catch (JSONException e){
                 Log.e("setNewsListFromJSOArray",e.toString());
-                continue;
             }
 
             oneNews.title = news.getString("title");

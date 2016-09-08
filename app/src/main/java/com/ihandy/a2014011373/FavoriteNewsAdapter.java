@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.thefinestartist.finestwebview.FinestWebView;
@@ -46,7 +47,11 @@ public class FavoriteNewsAdapter extends RecyclerView.Adapter<FavoriteNewsAdapte
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                news.webViewBuilder.show(news.source_url);
+                if (news.source_url != null)
+                    news.webViewBuilder.show(news.source_url);
+                else{
+                    Toast.makeText(v.getContext(),"No source url found.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         holder.like_button.setChecked(true);

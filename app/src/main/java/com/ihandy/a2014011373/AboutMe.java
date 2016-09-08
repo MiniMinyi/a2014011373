@@ -37,15 +37,12 @@ import java.net.URL;
 import java.util.Iterator;
 
 public class AboutMe extends AppCompatActivity {
-    private TextView textView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_me);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        textView = (TextView) findViewById(R.id.testTextView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -73,45 +74,47 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         final CheckBox saved_button = (CheckBox)view.findViewById(R.id.saved);
         news.saved_checkbox_in_main = saved_button;
 
-        if (news.source_url != null){
-            CardView cardView = (CardView)view.findViewById(R.id.card_view);
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    news.webViewBuilder
-                            = new MyFinestWebView.Builder(mContext).
-                            titleDefault(news.title).
-                            webViewBuiltInZoomControls(true).
-                            webViewDisplayZoomControls(true).
-                            webViewJavaScriptEnabled(false).
-                            setCustomAnimations(R.anim.slide_left_in,R.anim.hold,R.anim.hold,R.anim.slide_right_out).
-                            webViewCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK).
-                            addWebViewListener(new WebViewListener() {
-                                boolean finish = false;
-                                boolean title_check = false;
-                                /* Title check and progress == 100 achieve at the same time can save_check_box be checked */
-                                @Override
-                                public void onReceivedTitle(String title) {
-                                    super.onReceivedTitle(title);
-                                    if (title.contains(news.title)){
-                                        title_check = true;
-                                        if (finish) saved_button.setChecked(true);
-                                    }
-                                }
-
-                                @Override
-                                public void onProgressChanged(int progress) {
-                                    super.onProgressChanged(progress);
-                                    if (progress == 100) {
-                                        finish = true;
-                                        if (title_check) saved_button.setChecked(true);
-                                    }
-                                }
-                            });
-                    news.webViewBuilder.show(news.source_url);
+        CardView cardView = (CardView)view.findViewById(R.id.card_view);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (news.source_url == null){
+                    Toast.makeText(v.getContext(),"No source url found.",Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            });
-        }
+                news.webViewBuilder
+                        = new MyFinestWebView.Builder(mContext).
+                        titleDefault(news.title).
+                        webViewBuiltInZoomControls(true).
+                        webViewDisplayZoomControls(true).
+                        webViewJavaScriptEnabled(false).
+                        setCustomAnimations(R.anim.slide_left_in,R.anim.hold,R.anim.hold,R.anim.slide_right_out).
+                        webViewCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK).
+                        addWebViewListener(new WebViewListener() {
+                            boolean finish = false;
+                            boolean title_check = false;
+                            /* Title check and progress == 100 achieve at the same time can save_check_box be checked */
+                            @Override
+                            public void onReceivedTitle(String title) {
+                                super.onReceivedTitle(title);
+                                if (title.contains(news.title)){
+                                    title_check = true;
+                                    if (finish) saved_button.setChecked(true);
+                                }
+                            }
+
+                            @Override
+                            public void onProgressChanged(int progress) {
+                                super.onProgressChanged(progress);
+                                if (progress == 100) {
+                                    finish = true;
+                                    if (title_check) saved_button.setChecked(true);
+                                }
+                            }
+                        });
+                news.webViewBuilder.show(news.source_url);
+            }
+        });
 
         CheckBox like_button = (CheckBox)view.findViewById(R.id.like);
         news.like_checkbox_in_main = like_button;
