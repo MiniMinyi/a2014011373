@@ -148,7 +148,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
         if (news.liked) {
             holder.like_button.setChecked(true);
-            FavoriteNews.favoriteNews.add(news);
+            if (!FavoriteNews.favoriteNews.contains(news))
+                FavoriteNews.favoriteNews.add(news);
         }
     }
 

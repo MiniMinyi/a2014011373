@@ -6,21 +6,24 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@drawable/bg_favorite"
+    android:alpha="80"
     tools:context="com.ihandy.a2014011373.FavoriteNews">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             app:theme="@style/AppTheme.ActionBarTheme" />
 
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_favorite_news" />
+
+
 </android.support.design.widget.CoordinatorLayout>
