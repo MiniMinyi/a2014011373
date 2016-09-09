@@ -98,6 +98,7 @@ public class FavoriteNewsAdapter extends RecyclerView.Adapter<FavoriteNewsAdapte
             title = (TextView)view.findViewById(R.id.news_title);
             like_button = (CheckBox)view.findViewById(R.id.like);
             saved_button = (CheckBox)view.findViewById(R.id.saved);
+            mNews.saved_checkbox_in_favorite = saved_button;
         }
     }
 }

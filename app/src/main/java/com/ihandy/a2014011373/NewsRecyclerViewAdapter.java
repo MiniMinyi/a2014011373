@@ -75,6 +75,36 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         news.saved_checkbox_in_main = saved_button;
 
         CardView cardView = (CardView)view.findViewById(R.id.card_view);
+        news.webViewBuilder
+                = new MyFinestWebView.Builder(mContext).
+                setImgUrl(news.img_url).
+                setSourceUrl(news.source_url).
+                setNewsTitle(news.title).
+                titleDefault(news.title).
+                webViewBuiltInZoomControls(true).
+                webViewDisplayZoomControls(true).
+                webViewJavaScriptEnabled(false).
+                setCustomAnimations(R.anim.slide_left_in,R.anim.hold,R.anim.hold,R.anim.slide_right_out).
+                webViewCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK).
+                addWebViewListener(new WebViewListener() {
+                    String mTitle = null;
+                    /* Title check and progress == 100 achieve at the same time can save_check_box be checked */
+                    @Override
+                    public void onReceivedTitle(String title) {
+                        super.onReceivedTitle(title);
+                        mTitle = title;
+                    }
+
+                    @Override
+                    public void onProgressChanged(int progress) {
+                        super.onProgressChanged(progress);
+                        if (progress == 100 && mTitle != null && !mTitle.contains("Not Availabe")) {
+                            news.saved_checkbox_in_main.setChecked(true);
+                            if (news.saved_checkbox_in_favorite != null)
+                                news.saved_checkbox_in_favorite.setChecked(true);
+                        }
+                    }
+                });
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,36 +112,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     Toast.makeText(v.getContext(),"No source url found.",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                news.webViewBuilder
-                        = new MyFinestWebView.Builder(mContext).
-                        titleDefault(news.title).
-                        webViewBuiltInZoomControls(true).
-                        webViewDisplayZoomControls(true).
-                        webViewJavaScriptEnabled(false).
-                        setCustomAnimations(R.anim.slide_left_in,R.anim.hold,R.anim.hold,R.anim.slide_right_out).
-                        webViewCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK).
-                        addWebViewListener(new WebViewListener() {
-                            boolean finish = false;
-                            boolean title_check = false;
-                            /* Title check and progress == 100 achieve at the same time can save_check_box be checked */
-                            @Override
-                            public void onReceivedTitle(String title) {
-                                super.onReceivedTitle(title);
-                                if (title.contains(news.title)){
-                                    title_check = true;
-                                    if (finish) saved_button.setChecked(true);
-                                }
-                            }
-
-                            @Override
-                            public void onProgressChanged(int progress) {
-                                super.onProgressChanged(progress);
-                                if (progress == 100) {
-                                    finish = true;
-                                    if (title_check) saved_button.setChecked(true);
-                                }
-                            }
-                        });
                 news.webViewBuilder.show(news.source_url);
             }
         });
