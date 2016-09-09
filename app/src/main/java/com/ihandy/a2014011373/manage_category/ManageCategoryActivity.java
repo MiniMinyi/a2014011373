@@ -35,17 +35,14 @@ public class ManageCategoryActivity extends AppCompatActivity {
         unwatchedAdapter = new ItemAdapter(R.layout.list_item_unwatched_category, R.id.image, false, false, this);
         watchedAdapter.anotherAdapter = unwatchedAdapter;
         unwatchedAdapter.anotherAdapter = watchedAdapter;
-        mListFragment = ListFragment.newInstance(watchedAdapter);
-        unwatchedListFragment = ListFragment.newInstance(unwatchedAdapter);
-        showFragment(mListFragment, R.id.container);
-        showFragment(unwatchedListFragment, R.id.container2);
+        fragmentChanged();
     }
 
     public void fragmentChanged() {
         watchedAdapter.count = 0;
         unwatchedAdapter.count = 0;
-        mListFragment = ListFragment.newInstance(watchedAdapter);
-        unwatchedListFragment = ListFragment.newInstance(unwatchedAdapter);
+        mListFragment = ListFragment.newInstance(watchedAdapter, true);
+        unwatchedListFragment = ListFragment.newInstance(unwatchedAdapter, false);
         showFragment(mListFragment, R.id.container);
         showFragment(unwatchedListFragment, R.id.container2);
     }
