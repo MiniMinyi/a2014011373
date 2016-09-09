@@ -16,6 +16,25 @@ import com.thefinestartist.utils.content.Ctx;
  */
 public class MyFinestWebView extends FinestWebView {
     public static class Builder extends FinestWebView.Builder{
+        protected String source_url;
+        protected String img_url;
+        protected String news_title;
+
+        protected Builder setSourceUrl(String sourceUrl){
+            this.source_url = sourceUrl;
+            return this;
+        }
+
+        protected Builder setImgUrl(String imgUrl){
+            this.img_url = imgUrl;
+            return this;
+        }
+
+        protected Builder setNewsTitle(String NewsTitle){
+            this.news_title = NewsTitle;
+            return this;
+        }
+
 
         public Builder(@NonNull Activity activity) {
             super(activity);

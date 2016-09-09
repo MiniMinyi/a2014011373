@@ -145,6 +145,7 @@ public class PresenterSingleton {
             if (newlyAddNewsCount % 6 == 5) {
                 fragment.notifyDataChange();
                 MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
+                Log.v("setNewList",String.format("From category %s, newly add news count %d",newsList.get(0).category,newsList.size()));
             }
         }
         return newlyAddNewsCount;
@@ -200,9 +201,9 @@ public class PresenterSingleton {
                                     JSONArray newsArray = data.getJSONArray("news");
                                     fragment.setContentItems(newsList);
                                     setNewslistFromJSONArray(newsArray,newsList,fragment);
-//                                    if (MainActivity.mNewsPagerAdapter != null){
-//                                        MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
-//                                    }
+                                    if (MainActivity.mNewsPagerAdapter != null){
+                                        MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
+                                    }
 
                                 }catch (JSONException e){
                                     Log.e("getListOfNews",e.toString());
