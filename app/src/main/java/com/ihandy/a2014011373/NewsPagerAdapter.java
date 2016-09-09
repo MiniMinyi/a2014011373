@@ -11,7 +11,7 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 /**
  * Created by liumy on 16/8/26.
  */
-public class NewsPagerAdapter extends FragmentStatePagerAdapter {
+public class NewsPagerAdapter extends NewFragmentStatePagerAdapter {
     MainActivity mainActivity;
 
     public NewsPagerAdapter(FragmentManager fm, MainActivity mainActivity){

@@ -141,9 +141,18 @@ public class PresenterSingleton {
             if (firstImg != null)
                 oneNews.img_url = firstImg.getString("url");
             newsList.add(newlyAddNewsCount,oneNews);
+            if (fragment.mAdapter != null) {
+                if (newlyAddNewsCount == 0) {
+                    fragment.mAdapter.notifyItemRemoved(0);
+                    fragment.mAdapter.notifyItemInserted(0);
+                    fragment.mAdapter.notifyItemRangeChanged(0, 1);
+                } else {
+                    fragment.mAdapter.notifyItemInserted(newlyAddNewsCount);
+                    fragment.mAdapter.notifyItemRangeChanged(newlyAddNewsCount, 1);
+                }
+            }
             ++newlyAddNewsCount;
             if (newlyAddNewsCount % 6 == 5) {
-                fragment.notifyDataChange();
                 MainActivity.mNewsPagerAdapter.notifyDataSetChanged();
                 Log.v("setNewList",String.format("From category %s, newly add news count %d",newsList.get(0).category,newsList.size()));
             }

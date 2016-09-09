@@ -24,17 +24,15 @@ import java.util.List;
  * Created by liumy on 16/8/27.
  * RecyclerViewAdapter to display every news
  */
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
     List<News> contents;
-    NetworkImageView mNetworkImageView;
-    TextView mNewsTitle;
-    TextView mNewsCategory;
-    ImageLoader mImageLoader;
     Context mContext;
+    ImageLoader mImageLoader;
 
     public NewsRecyclerViewAdapter(List<News> contents, Context context) {
         this.contents = contents;
         this.mContext = context;
+        this.mImageLoader = RequestQueueSingleton.getInstance(mContext).getImageLoader();
     }
 
     @Override
@@ -48,33 +46,50 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (contents.size() == 0){
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_news_not_found, parent, false);
-            return new RecyclerView.ViewHolder(view){
-            };
+            return new NewsRecyclerViewAdapter.ViewHolder(view);
         }
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_card_news, parent, false);
-        mNetworkImageView = (NetworkImageView) view.findViewById(R.id.news_img);
-        mImageLoader = RequestQueueSingleton.getInstance(mContext).getImageLoader();
-        final News news = contents.get(viewType);
-        if (news.img_url != null){
-            mNetworkImageView.setImageUrl(news.img_url,mImageLoader);
-            mNetworkImageView.setDrawingCacheEnabled(true);
-        }
-        mNewsTitle = (TextView)view.findViewById(R.id.news_title);
-        if (news.title != null){
-            mNewsTitle.setText(news.title);
-        }
-        mNewsCategory = (TextView)view.findViewById(R.id.category_label);
-        mNewsCategory.setText("");
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.mNewsCategory = (TextView)view.findViewById(R.id.category_label);
+        viewHolder.mNewsTitle = (TextView)view.findViewById(R.id.news_title);
+        viewHolder.mNetworkImageView = (NetworkImageView) view.findViewById(R.id.news_img);
 
-        final CheckBox saved_button = (CheckBox)view.findViewById(R.id.saved);
+        News news = contents.get(viewType);
+        CheckBox saved_button = (CheckBox)view.findViewById(R.id.saved);
+        viewHolder.saved_button = saved_button;
         news.saved_checkbox_in_main = saved_button;
+        CheckBox like_button = (CheckBox)view.findViewById(R.id.like);
+        viewHolder.like_button = like_button;
+        news.like_checkbox_in_main = like_button;
 
-        CardView cardView = (CardView)view.findViewById(R.id.card_view);
+        viewHolder.cardView = (CardView)view.findViewById(R.id.card_view);
+        return viewHolder;
+    }
+
+
+    @Override
+    public void onBindViewHolder(NewsRecyclerViewAdapter.ViewHolder holder, int position) {
+        if (contents.size() == 0){
+            return;
+        }
+        final News news = contents.get(position);
+        if (news.img_url != null){
+            holder.mNetworkImageView.setImageUrl(news.img_url,mImageLoader);
+            holder.mNetworkImageView.setDrawingCacheEnabled(true);
+        }
+        if (news.title != null){
+            holder.mNewsTitle.setText(news.title);
+        }
+
+        holder.mNewsCategory.setText("");
+
+
         news.webViewBuilder
                 = new MyFinestWebView.Builder(mContext).
                 setImgUrl(news.img_url).
@@ -105,7 +120,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                 });
-        cardView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.source_url == null){
@@ -116,9 +131,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         });
 
-        CheckBox like_button = (CheckBox)view.findViewById(R.id.like);
-        news.like_checkbox_in_main = like_button;
-        like_button.setOnClickListener(new View.OnClickListener() {
+        holder.like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean checked = ((CheckBox)v).isChecked();
@@ -129,14 +142,18 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             }
         });
-        return new RecyclerView.ViewHolder(view){
-
-        };
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public NetworkImageView mNetworkImageView;
+        public TextView mNewsTitle;
+        public TextView mNewsCategory;
+        public CheckBox saved_button;
+        public CheckBox like_button;
+        public CardView cardView;
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        public ViewHolder(View view) {
+            super(view);
+        }
     }
 }

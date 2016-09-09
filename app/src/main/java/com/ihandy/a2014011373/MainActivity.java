@@ -128,9 +128,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (tabList.isEmpty()){
-            PresenterSingleton.getInstance(this).initCurrentCategories();
-        }
     }
 
     public Drawable createDrawableFromResource(int drawableId){
@@ -179,5 +176,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveToDatabase();
+    }
+
+    private void saveToDatabase(){
+
     }
 }
