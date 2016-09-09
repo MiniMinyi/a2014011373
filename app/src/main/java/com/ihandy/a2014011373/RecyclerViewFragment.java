@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class RecyclerViewFragment extends Fragment implements SwipyRefreshLayout.OnRefreshListener{
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    public NewsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private String categoryKey;
     private Context mContext;

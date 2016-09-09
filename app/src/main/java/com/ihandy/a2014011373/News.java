@@ -22,5 +22,6 @@ public class News {
     String updated_time;
     CheckBox like_checkbox_in_main = null;
     CheckBox saved_checkbox_in_main = null;
+    CheckBox saved_checkbox_in_favorite = null;
     FinestWebView.Builder webViewBuilder = null;
 }
