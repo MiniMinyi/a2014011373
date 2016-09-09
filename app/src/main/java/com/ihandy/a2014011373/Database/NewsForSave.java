@@ -26,6 +26,12 @@ public class NewsForSave extends Model {
     @Column(name = "Category", index = true)
     public Category category;
 
+    @Column(name = "isSaved")
+    public boolean isSaved;
+
+    @Column(name = "isLiked")
+    public boolean isLiked;
+
     public NewsForSave(){
         super();
     }

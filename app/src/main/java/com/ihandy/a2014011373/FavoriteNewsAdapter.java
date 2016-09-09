@@ -63,6 +63,7 @@ public class FavoriteNewsAdapter extends RecyclerView.Adapter<FavoriteNewsAdapte
                 boolean checked = ((CheckBox)v).isChecked();
                 if (!checked){
                     news.like_checkbox_in_main.setChecked(false);
+                    news.liked = false;
                     FavoriteNews.favoriteNews.remove(pos);
                     FavoriteNewsAdapter.this.notifyItemRemoved(pos);
                     FavoriteNewsAdapter.this.notifyItemRangeChanged(pos, FavoriteNews.favoriteNews.size());

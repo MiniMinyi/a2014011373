@@ -8,10 +8,10 @@ import android.support.v4.app.Fragment;
 public class CategoryTab {
     private String jsonkey;
     private String title;
-    private Fragment fragment;
+    private RecyclerViewFragment fragment;
     private long mId;
 
-    public CategoryTab(String key, String title, Fragment fragment, long id){
+    public CategoryTab(String key, String title, RecyclerViewFragment fragment, long id){
         this.jsonkey = key;
         this.title = title;
         this.fragment = fragment;
@@ -43,7 +43,7 @@ public class CategoryTab {
         return title;
     }
 
-    public Fragment getFragment(){
+    public RecyclerViewFragment getFragment(){
         return fragment;
     }
 }

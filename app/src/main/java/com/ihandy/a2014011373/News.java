@@ -24,4 +24,6 @@ public class News {
     CheckBox saved_checkbox_in_main = null;
     CheckBox saved_checkbox_in_favorite = null;
     FinestWebView.Builder webViewBuilder = null;
+    boolean saved = false;
+    boolean liked = false;
 }

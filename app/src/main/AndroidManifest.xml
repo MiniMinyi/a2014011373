@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="AA_DB_NAME" android:value="Pickrand.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="5" />
+        <meta-data android:name="AA_DB_NAME" android:value="news.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
         <meta-data
             android:name="AA_MODELS"
             android:value="com.ihandy.a2014011373.database.Category, com.ihandy.a2014011373.database.NewsForSave" />
@@ -23,7 +23,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +34,7 @@
             android:name=".AboutMe"
             android:label="@string/title_activity_about_me"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -43,7 +43,7 @@
             android:name=".manage_category.ManageCategoryActivity"
             android:label="@string/title_activity_manage_category"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -65,7 +65,7 @@
             android:name=".FavoriteNews"
             android:label="@string/title_activity_favorite_news"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />

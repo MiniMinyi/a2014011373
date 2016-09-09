@@ -3,7 +3,6 @@ package com.ihandy.a2014011373;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -21,7 +20,6 @@ public class NewsPagerAdapter extends NewFragmentStatePagerAdapter {
 
     /**
      * 得到每个页面
-     * @TODO return appropriate Fragment later
      */
     @Override
     public Fragment getItem(int position){

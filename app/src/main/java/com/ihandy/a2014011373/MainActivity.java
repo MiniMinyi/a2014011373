@@ -1,12 +1,10 @@
 package com.ihandy.a2014011373;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,11 +16,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.ihandy.a2014011373.database.Category;
+import com.ihandy.a2014011373.database.NewsForSave;
 import com.ihandy.a2014011373.manage_category.ManageCategoryActivity;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liumy on 16/8/27.
@@ -43,8 +45,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        for (int i = 0; i < this.databaseList().length; ++ i)
+            Log.d("database list",this.databaseList()[i]);
         mRequestQueue = RequestQueueSingleton.getInstance(this);
-        setUpViewPager();
+
+        setContentView(R.layout.activity_main_material_view_pager);
+
         //set up drawer
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -63,13 +70,26 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setHomeButtonEnabled(true);
         }
+
+        setUpViewPager();
+        //queryDatabase();
+    }
+
+    private void queryDatabase(){
+        Boolean isWatched = true;
+        List<Category> categories = new Select().from(Category.class).where("isWatched = ?",true).execute();
+        List<NewsForSave> news = new Select().from(NewsForSave.class).execute();
+
+        Log.v("queryDatabase",String.format("categories size = %d",categories.size()));
+        Log.v("queryDatabase",String.format("news count = %d",news.size()));
     }
 
     private void setUpViewPager(){
-        setContentView(R.layout.activity_main_material_view_pager);
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         toolbar = mViewPager.getToolbar();
+        toolbar.setPopupTheme(R.style.AppTheme_PopupOverlay);
         unwatchedTabList = new ArrayList<>();
+        tabList = new ArrayList<>();
         toolbar.setTitle("");
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -94,35 +114,55 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //TODO change to load tablist from disk later
-    private void initTabList(){
-        tabList = new ArrayList<>();
-        int id = 0;
-        tabList.add(new CategoryTab("bussiness","Bussiness",
-                RecyclerViewFragment.newInstance("bussiness"),id));
-        ++id;
-        tabList.add(new CategoryTab("elections","Elections",
-                RecyclerViewFragment.newInstance("elections"),id));
-        ++id;
-        tabList.add(new CategoryTab("entertainment","Entertainment",
-                RecyclerViewFragment.newInstance("entertainment"),id));
-        ++id;
-        tabList.add(new CategoryTab("health","Health",
-                RecyclerViewFragment.newInstance("health"),id));
-        ++id;
-        tabList.add(new CategoryTab("national","India",
-                RecyclerViewFragment.newInstance("national"),id));
-    }
-
     private void setupAdapter(){
-        if (tabList == null){
-            //initTabList();
-            tabList = new ArrayList<CategoryTab>();
+        if (!setUpFromDatabase())
             PresenterSingleton.getInstance(this).initCurrentCategories();
-        }
+
         mNewsPagerAdapter = new NewsPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.getViewPager().setAdapter(mNewsPagerAdapter);
         mViewPager.setMaterialViewPagerListener(mNewsPagerAdapter.newMaterialViewPagerListener());
+    }
+
+    private boolean setUpTabList(ArrayList<CategoryTab> tablist, boolean isWatched, int offset){
+        List<Category> categories = new Select().from(Category.class).where("isWatched = ?",isWatched).orderBy("showOrder").execute();
+        if (categories != null && !categories.isEmpty()){
+            for (int i = 0; i < categories.size(); ++ i){
+                Category savedCategory = categories.get(i);
+                RecyclerViewFragment fragment = RecyclerViewFragment.newInstance(savedCategory.json_key);
+                fragment.setContext(this);
+                CategoryTab category = new CategoryTab(savedCategory.json_key,
+                        savedCategory.name,
+                        fragment,
+                        savedCategory.order+offset);
+                List<News> newsList = new ArrayList<>();
+                List<NewsForSave> savedNewsList = new Select().from(NewsForSave.class).
+                        where("CategoryName = ?",savedCategory.name).orderBy("news_id DESC").execute();
+                for (int j = 0; j < savedNewsList.size(); ++ j){
+                    News news = new News();
+                    NewsForSave savedNews = savedNewsList.get(j);
+                    news.img_url = savedNews.img_url;
+                    news.source_url = savedNews.source_url;
+                    news.title = savedNews.title;
+                    news.category = savedNews.category_name;
+                    news.news_id = savedNews.news_id;
+                    news.saved = savedNews.isSaved;
+                    news.liked = savedNews.isLiked;
+                    newsList.add(news);
+                }
+                fragment.setContentItems(newsList);
+                tablist.add(category);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean setUpFromDatabase(){
+        boolean flag = false;
+        if (setUpTabList(tabList,true,0))
+            flag = true;
+        setUpTabList(unwatchedTabList,false,tabList.size());
+        return flag;
     }
 
     @Override
@@ -141,7 +181,6 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == START_MANAGE_CATEGORY){
             mNewsPagerAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -182,9 +221,65 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         saveToDatabase();
+        //queryDatabase();
+    }
+
+    private void saveCategoryList(ArrayList<CategoryTab> list, boolean isWatch){
+        ActiveAndroid.beginTransaction();
+        try{
+            for (int i = 0; i < list.size(); ++ i){
+                CategoryTab tab = list.get(i);
+                Category category = new Select().from(Category.class).where("Key = ?",tab.getJsonkey()).executeSingle();
+                if (category != null){
+                    category.order = i;
+                    category.isWatched = isWatch;
+                    category.save();
+                }else{
+                    category = new Category();
+                    category.name = tab.getTitle();
+                    category.json_key = tab.getJsonkey();
+                    category.isWatched = isWatch;
+                    category.order = i;
+                    category.save();
+                }
+
+                List<News> newsList = tab.getFragment().getNewsList();
+                for (int j = 0; j < newsList.size(); ++ j){
+                    News news = newsList.get(j);
+                    NewsForSave savedNews = new Select().
+                            from(NewsForSave.class).
+                            where("CategoryName = ?",category.name).
+                            where("news_id = ?",news.news_id).executeSingle();
+                    if (savedNews != null) {
+                        savedNews.isLiked = news.liked;
+                        savedNews.isSaved = news.saved;
+                        savedNews.save();
+                        continue;
+                    }
+                    NewsForSave save_news = new NewsForSave();
+                    save_news.category = category;
+                    save_news.category_name = category.name;
+                    save_news.img_url = news.img_url;
+                    save_news.source_url = news.source_url;
+                    save_news.news_id = news.news_id;
+                    save_news.title = news.title;
+                    save_news.isSaved = news.saved;
+                    save_news.isLiked = news.liked;
+                    save_news.save();
+                }
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        }catch (Exception e){
+            Log.v("saveInDatabase",e.toString());
+        }
+        finally {
+            ActiveAndroid.endTransaction();
+        }
     }
 
     private void saveToDatabase(){
-
+        ActiveAndroid.getDatabase();
+        saveCategoryList(tabList, true);
+        saveCategoryList(unwatchedTabList,false);
     }
 }

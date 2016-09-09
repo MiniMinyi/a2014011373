@@ -15,11 +15,16 @@ public class Category extends Model{
     @Column(name = "Name")
     public String name;
 
-    public Category(String name){
-        this.name = name;
-    }
+    @Column(name = "Key")
+    public String json_key;
 
-    public List<NewsForSave> listOfNews(){
-        return getMany(NewsForSave.class,"Category");
+    @Column(name = "isWatched")
+    public Boolean isWatched;
+
+    @Column(name = "showOrder")
+    public Integer order;
+
+    public Category(){
+        super();
     }
 }
