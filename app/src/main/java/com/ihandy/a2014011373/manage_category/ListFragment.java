@@ -41,10 +41,12 @@ public class ListFragment extends Fragment{
 
     private DragListView mDragListView;
     public ItemAdapter mListAdapter;
+    private static boolean isWatched;
 
-    public static ListFragment newInstance(ItemAdapter mListAdapter) {
+    public static ListFragment newInstance(ItemAdapter mListAdapter, boolean _isWatched) {
         ListFragment listFragment= new ListFragment();
         listFragment.mListAdapter = mListAdapter;
+        isWatched = _isWatched;
         return listFragment;
     }
 
@@ -86,7 +88,10 @@ public class ListFragment extends Fragment{
         //mListAdapter = new ItemAdapter(R.layout.list_item_watched_category, R.id.image, false);
         mDragListView.setAdapter(mListAdapter, true);
         mDragListView.setCanDragHorizontally(false);
-        mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item_watched_category));
+        if(isWatched)
+            mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item_watched_category));
+        else
+            mDragListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item_unwatched_category));
         //List<Pair<String,RecyclerViewFragment>> list = mListAdapter.getItemList();
 
     }
