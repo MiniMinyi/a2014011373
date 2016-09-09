@@ -36,6 +36,8 @@ public class PresenterSingleton {
     }
 
     public static synchronized PresenterSingleton getInstance(Context context){
+        if (context != null)
+            mContext = context;
         if (mInstance == null){
             mInstance = new PresenterSingleton(context);
         }
@@ -62,7 +64,7 @@ public class PresenterSingleton {
                                     if (MainActivity.tabList != null){
                                         MainActivity.tabList.clear();
                                     }else {
-                                        MainActivity.tabList = new ArrayList<CategoryTab>();
+                                        MainActivity.tabList = new ArrayList<>();
                                     }
                                     int id = 0;
                                     while (it.hasNext()){
@@ -70,7 +72,7 @@ public class PresenterSingleton {
                                         String title = categories.get(key).toString();
                                         RecyclerViewFragment fragment = RecyclerViewFragment.newInstance(key);
                                         fragment.setContext(mContext);
-                                        List<News> newsList = new ArrayList<News>();
+                                        List<News> newsList = new ArrayList<>();
                                         getListOfNews(key,newsList,fragment);
                                         MainActivity.tabList.add(new CategoryTab(key,title,
                                                 fragment,id));
@@ -92,6 +94,7 @@ public class PresenterSingleton {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 Log.e("getCurrentCategories",error.toString());
+                                Toast.makeText(mContext,"No Network connection.",Toast.LENGTH_SHORT).show();
                             }
                         });
         RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsonObjectRequest);

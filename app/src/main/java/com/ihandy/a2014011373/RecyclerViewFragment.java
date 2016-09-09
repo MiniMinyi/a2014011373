@@ -51,6 +51,10 @@ public class RecyclerViewFragment extends Fragment implements SwipyRefreshLayout
             mAdapter.notifyDataSetChanged();
     }
 
+    public List<News> getNewsList(){
+        return mContentItems;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recyclerview, container, false);

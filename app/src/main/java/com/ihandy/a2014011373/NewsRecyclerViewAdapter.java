@@ -6,16 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.thefinestartist.finestwebview.FinestWebView;
 import com.thefinestartist.finestwebview.listeners.WebViewListener;
 
 import java.util.List;
@@ -98,7 +95,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
                 titleDefault(news.title).
                 webViewBuiltInZoomControls(true).
                 webViewDisplayZoomControls(true).
-                webViewJavaScriptEnabled(false).
+                webViewJavaScriptEnabled(true).
                 setCustomAnimations(R.anim.slide_left_in,R.anim.hold,R.anim.hold,R.anim.slide_right_out).
                 webViewCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK).
                 addWebViewListener(new WebViewListener() {
@@ -115,6 +112,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
                         super.onProgressChanged(progress);
                         if (progress == 100 && mTitle != null && !mTitle.contains("Not Availabe")) {
                             news.saved_checkbox_in_main.setChecked(true);
+                            news.saved = true;
                             if (news.saved_checkbox_in_favorite != null)
                                 news.saved_checkbox_in_favorite.setChecked(true);
                         }
@@ -136,12 +134,22 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             public void onClick(View v) {
                 boolean checked = ((CheckBox)v).isChecked();
                 if (checked){
+                    news.liked = true;
                     FavoriteNews.favoriteNews.add(news);
                 }else{
+                    news.liked = false;
                     FavoriteNews.favoriteNews.remove(news);
                 }
             }
         });
+
+        if (news.saved)
+            holder.saved_button.setChecked(true);
+
+        if (news.liked) {
+            holder.like_button.setChecked(true);
+            FavoriteNews.favoriteNews.add(news);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

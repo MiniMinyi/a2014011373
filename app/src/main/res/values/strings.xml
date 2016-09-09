@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="action_get_categories">Get new categories</string>
+    <string name="action_get_categories">Get categories from Internet</string>
     <string name="title_activity_about_me">AboutMe</string>
     <string name="title_activity_manage_category">ManageCategory</string>
     <string name="title_activity_favorite_news">FavoriteNews</string>
